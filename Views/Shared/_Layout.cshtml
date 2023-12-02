@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="robots" content="">
+    <meta name="generator" content="">
+    <title>@ViewBag.Title</title>
+    <link rel="icon" href="~/Content/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Lato%3Aregular%2C700%2C400%2C700%7CDancing+Script%3Aregular%2C400&amp;display=swap&amp;ver=3.9" type="text/css" media="all" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Vesper+Libre%3A400%2C500%2C700%2C900%2C400i%2C500i%2C700i%2C900i%7CUnlock%3A400%2C400i%7CCarme%3A400%2C400i%7CPiedra%3A400%2C400i%7CParisienne%3A400%2C400i%7CPrata%3A400%2C400i%7CPT+Serif+Caption%3A400%2C400i%7CSen%3A400%2C700%2C800%2C400i%2C700i%2C800i&amp;display=swap&amp;subset=all&amp;ver=3.2.1" type="text/css" media="all" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?display=swap&amp;family=Fira+Sans%3A300%2C400%7CPrata%3A300%2C400" rel="stylesheet" type="text/css" media="all">
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/css/site.css" rel="stylesheet">
+    @RenderSection("css", required: false)
+    <script src="~/Content/js/jquery.min.js"></script>
+</head>
+<body>
+    <!--Menu - Header-->
+    <header>
+
+    </header>
+    <!--Menu - Header-->
+    <!--Main-->
+    @RenderBody()
+    <!--Main-->
+    <!--Footer-->
+    <footer>
+        <div class="text-center">
+            <div class="p-3 bg-dark text-light design-by">
+                Design by www.nailsystem.com
+            </div>
+        </div>
+    </footer>
+    <!--Footer-->
+    @RenderSection("modal", required: false)
+    <script src="~/Content/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/js/site.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

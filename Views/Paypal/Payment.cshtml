@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Payment";
+}
+@section css{
+    <link href="~/Content/css/payments.css" rel="stylesheet" />
+    <style type="text/css">
+        .bg-main {
+            background: var(--color-theme);
+        }
+    </style>
+}
+<main class="bg-main py-5">
+    <div class="container-lg">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="qpp-style default">
+                    <div id="plain">
+                        <form action="/process.html" method="post">
+                            <input type="hidden" name="img" id="img" value="@ViewBag.Img" />
+                            <h2 id="qpp_reload" class="qpp-header">Payment Form</h2>
+                            <div class="qpp_nice_label qpp_label_blur">
+                                <input type="number" id="amount" name="amount" placeholder="Amount to pay" class="required" />
+                            </div>
+                            <div class="qpp_nice_label qpp_label_blur">
+                                <input type="email" id="stock" name="stock" placeholder="Receiver's email address" class="required" />
+                            </div>
+                            <div class="qpp_nice_label qpp_label_blur">
+                                <input type="email" id="email" name="email" placeholder="Buyer's email address" class="required" />
+                            </div>
+                            <div class="qpp_nice_label qpp_label_blur">
+                                <textarea rows="4" id="message" name="message" placeholder="Comment" class="required"></textarea>
+                            </div>
+                            <p class="submit pay-button">
+                                <input type="image" name="submit" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_buynow_107x26.png" alt="Buy Now">
+                            </p>
+                            <div id="qppchecking">Validating payment information...</div>
+                        </form>
+                        <div class="qpp-loading">Waiting for PayPal...</div>
+                        <div class="qpp-validating-form">Validating payment information...</div>
+                        <div class="qpp-processing-form">Waiting for PayPal...</div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts{
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("form").validate();
+            $("input[name='submit']").on("click", function () {
+                if ($("form").valid()) {
+                    $("form").submit();
+                }
+            });
+        });
+    </script>
+}

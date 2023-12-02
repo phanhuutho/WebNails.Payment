@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Finish";
+}
+@section css{
+    <style type="text/css">
+        #finish {
+            min-height: 350px;
+        }
+    </style>
+}
+<main class="bg-main">
+    <div class="container-lg">
+        <div class="row justify-content-center h-100">
+            <div class="col-8 text-center d-flex justify-content-center h-100 align-items-center" id="finish">
+
+            </div>
+        </div>
+    </div>
+</main>
+@section modal{
+    <div class="modal fade" id="ModalMessage" tabindex="-1" aria-labelledby="ModalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    @Html.Raw(ViewBag.SecureHash ?? "")
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#ModalMessage").modal("show");
+            setTimeout(function () {
+                document.location.href = "/index.html";
+            }, 3500);
+        });
+    </script>
+}

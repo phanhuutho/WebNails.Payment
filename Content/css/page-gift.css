@@ -1,0 +1,11 @@
+﻿main {
+    background-color: var(--color-theme);
+}
+.page-main {
+    position: relative;
+}
+.page-main .box-inner {
+    padding: var(--padding-box);
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+}

@@ -1,0 +1,145 @@
+﻿@{
+    ViewBag.Title = "Process";
+    var EmailPaypal = string.Format("{0}", ViewBag.EmailPaypal);
+    var Amount = string.Format("{0}", ViewBag.Amount);
+    var Email = string.Format("{0}", ViewBag.Email);
+    var UrlShopping = Url.Action("Payment", "Home", null, Request.Url.Scheme);
+    var UrlReturn = Url.Action("PaymentResponse", "Home", null, Request.Url.Scheme);
+}
+@section css{
+    <style type="text/css">
+        input[type=image] {
+            width: 1px;
+            height: 1px;
+        }
+    </style>
+}
+<main class="bg-main">
+    <div class="container-lg">
+        <div class="row justify-content-center">
+            <div class="col-8" id="process">
+
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script type="text/javascript">
+        function post() {
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = 'https://www.paypal.com/cgi-bin/webscr';
+
+            const hiddenField_Business = document.createElement('input');
+            hiddenField_Business.type = 'hidden';
+            hiddenField_Business.name = 'business';
+            hiddenField_Business.value = '@EmailPaypal';
+
+            const hiddenField_Email = document.createElement('input');
+            hiddenField_Email.type = 'hidden';
+            hiddenField_Email.name = 'email';
+            hiddenField_Email.value = '@Email';
+
+            const hiddenField_ItemName = document.createElement('input');
+            hiddenField_ItemName.type = 'hidden';
+            hiddenField_ItemName.name = 'item_name';
+            hiddenField_ItemName.value = 'E Gift Purcharse';
+
+            const hiddenField_ItemNumber = document.createElement('input');
+            hiddenField_ItemNumber.type = 'hidden';
+            hiddenField_ItemNumber.name = 'item_number';
+            hiddenField_ItemNumber.value = '1';
+
+            const hiddenField_Quantity = document.createElement('input');
+            hiddenField_Quantity.type = 'hidden';
+            hiddenField_Quantity.name = 'quantity';
+            hiddenField_Quantity.value = '1';
+
+            const hiddenField_CurrencyCode = document.createElement('input');
+            hiddenField_CurrencyCode.type = 'hidden';
+            hiddenField_CurrencyCode.name = 'currency_code';
+            hiddenField_CurrencyCode.value = 'USD';
+
+            const hiddenField_CMD = document.createElement('input');
+            hiddenField_CMD.type = 'hidden';
+            hiddenField_CMD.name = 'cmd';
+            hiddenField_CMD.value = '_xclick';
+
+            const hiddenField_ADD = document.createElement('input');
+            hiddenField_ADD.type = 'hidden';
+            hiddenField_ADD.name = 'add';
+            hiddenField_ADD.value = '1';
+
+            const hiddenField_Display = document.createElement('input');
+            hiddenField_Display.type = 'hidden';
+            hiddenField_Display.name = 'display';
+            hiddenField_Display.value = '1';
+
+            const hiddenField_Upload = document.createElement('input');
+            hiddenField_Upload.type = 'hidden';
+            hiddenField_Upload.name = 'upload';
+            hiddenField_Upload.value = '1';
+
+            const hiddenField_Amount = document.createElement('input');
+            hiddenField_Amount.type = 'hidden';
+            hiddenField_Amount.name = 'amount';
+            hiddenField_Amount.value = '@Amount';
+
+            const hiddenField_ShoppingURL = document.createElement('input');
+            hiddenField_ShoppingURL.type = 'hidden';
+            hiddenField_ShoppingURL.name = 'shopping_url';
+            hiddenField_ShoppingURL.value = '@UrlShopping';
+
+            const hiddenField_Return = document.createElement('input');
+            hiddenField_Return.type = 'hidden';
+            hiddenField_Return.name = 'return';
+            hiddenField_Return.value = '@Html.Raw(UrlReturn)';
+
+            const hiddenField_NoShipping = document.createElement('input');
+            hiddenField_NoShipping.type = 'hidden';
+            hiddenField_NoShipping.name = 'no_shipping';
+            hiddenField_NoShipping.value = '0';
+
+            const hiddenField_NoNote = document.createElement('input');
+            hiddenField_NoNote.type = 'hidden';
+            hiddenField_NoNote.name = 'no_note';
+            hiddenField_NoNote.value = '1';
+
+            const hiddenField_Submit = document.createElement('input');
+            hiddenField_Submit.type = 'image';
+            hiddenField_Submit.name = 'submit';
+            hiddenField_Submit.value = '1';
+            hiddenField_Submit.src = 'https://www.paypalobjects.com/en_US/i/btn/btn_cart_LG.gif';
+            hiddenField_Submit.alt = 'Add to Cart';
+
+            const element_img = document.createElement('img');
+            element_img.alt = '';
+            element_img.width = '1';
+            element_img.height = '1';
+            element_img.src = 'https://www.paypalobjects.com/en_US/i/scr/pixel.gif';
+
+            form.appendChild(hiddenField_Business);
+            form.appendChild(hiddenField_Email);
+            form.appendChild(hiddenField_CMD);
+            form.appendChild(hiddenField_ItemName);
+            form.appendChild(hiddenField_ItemNumber);
+            form.appendChild(hiddenField_Quantity);
+            form.appendChild(hiddenField_Amount);
+            form.appendChild(hiddenField_CurrencyCode);
+            //form.appendChild(hiddenField_ADD);
+            //form.appendChild(hiddenField_Display);
+            //form.appendChild(hiddenField_Upload);
+            form.appendChild(hiddenField_ShoppingURL);
+            form.appendChild(hiddenField_Return);
+            form.appendChild(hiddenField_NoShipping);
+            form.appendChild(hiddenField_NoNote);
+            form.appendChild(hiddenField_Submit);
+            form.appendChild(element_img);
+
+            document.getElementById("process").appendChild(form);
+            form.submit();
+        }
+
+        post();
+    </script>
+}
