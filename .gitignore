@@ -6,3 +6,5 @@
 /obj/Debug/WebNails.Payment.dll
 /obj/Debug/WebNails.Payment.pdb
 /obj/Debug/WebNails.Payment.csproj.CoreCompileInputs.cache
+/.vs/WebNails.Payment/config/applicationhost.config
+/obj/Debug/WebNails.Payment.csproj.FileListAbsolute.txt
