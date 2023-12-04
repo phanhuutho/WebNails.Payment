@@ -17,5 +17,13 @@ namespace WebNails.Payment
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+        protected void Application_AcquireRequestState(object sender, EventArgs e)
+        {
+            if (Request.RequestContext.RouteData.Values["SiteName"] == null)
+            {
+
+            }
+        }
     }
 }
