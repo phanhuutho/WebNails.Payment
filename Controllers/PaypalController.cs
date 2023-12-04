@@ -208,5 +208,11 @@ namespace WebNails.Payment.Controllers
         {
             return Json(new List<DataResponseModel>());
         }
+
+        [HttpPost]
+        public ActionResult UpdateCodeRefund(string SiteName, string Code)
+        {
+            return Json("OK");
+        }
     }
 }
