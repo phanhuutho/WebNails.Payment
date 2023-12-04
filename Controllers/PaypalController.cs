@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using WebNails.Payment.Models;
 
 namespace WebNails.Payment.Controllers
 {
@@ -200,6 +201,12 @@ namespace WebNails.Payment.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        [HttpPost]
+        public ActionResult GetDataCode(string SiteName, DateTime StartDate, DateTime EndDate)
+        {
+            return Json(new List<DataResponseModel>());
         }
     }
 }
