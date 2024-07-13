@@ -10,6 +10,9 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using QRCoder;
+using System.IO;
+using System.Drawing;
 using WebNails.Payment.Models;
 
 namespace WebNails.Payment.Controllers
@@ -321,6 +324,48 @@ namespace WebNails.Payment.Controllers
         public ActionResult UpdateCodeRefund(string SiteName, string Code)
         {
             return Json("OK");
+        }
+
+
+        public ActionResult GenerateQRCoce(string strCode)
+        {
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(strCode, QRCodeGenerator.ECCLevel.Q);
+            if (!Directory.Exists(Server.MapPath("/Upload/QRCode/")))
+            {
+                Directory.CreateDirectory(Server.MapPath("/Upload/QRCode/"));
+            }
+            qrCodeData.SaveRawData(Server.MapPath("/Upload/QRCode/file-" + strCode + ".qrr"), QRCodeData.Compression.Uncompressed);
+            QRCode qrCode = new QRCode(qrCodeData);
+            var qrCodeImage = qrCode.GetGraphic(5);
+            return View(BitmapToBytes(qrCodeImage));
+        }
+
+        public ActionResult GetQRCoce(string strCode)
+        {
+            QRCodeData qrCodeData = new QRCodeData(Server.MapPath("/Upload/QRCode/file-" + strCode + ".qrr"), QRCodeData.Compression.Uncompressed);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(20);
+            return View(BitmapToBytes(qrCodeImage));
+        }
+
+        private Byte[] BitmapToBytes(Bitmap img)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            }
+        }
+
+        private void SaveBitmap(Bitmap img, string strCode)
+        {
+            var filepath = Server.MapPath("/Upload/QRCode/file-" + strCode + ".png");
+            if (!Directory.Exists(Server.MapPath("/Upload/QRCode/")))
+            {
+                Directory.CreateDirectory(Server.MapPath("/Upload/QRCode/"));
+            }
+            img.Save(filepath);
         }
     }
 }

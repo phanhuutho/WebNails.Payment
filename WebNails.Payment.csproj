@@ -254,6 +254,8 @@
     <Content Include="Views\Paypal\Payment.cshtml" />
     <Content Include="Views\Paypal\Process.cshtml" />
     <Content Include="Views\Paypal\Finish.cshtml" />
+    <Content Include="Views\Home\GenerateQRCoce.cshtml" />
+    <Content Include="Views\Home\GetQRCoce.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
