@@ -181,6 +181,7 @@
     <Content Include="Content\images\e-gift\gift_7.jpg" />
     <Content Include="Content\images\e-gift\gift_8.jpg" />
     <Content Include="Content\images\e-gift\gift_9.jpg" />
+    <Content Include="Content\images\logo.png" />
     <Content Include="Content\js\bootstrap-pdf-viewer.js" />
     <Content Include="Content\js\bootstrap.bundle.js" />
     <Content Include="Content\js\bootstrap.bundle.min.js" />
