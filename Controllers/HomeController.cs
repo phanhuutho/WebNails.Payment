@@ -17,6 +17,7 @@ namespace WebNails.Payment.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly string VirtualData = ConfigurationManager.AppSettings["VirtualData"];
         // GET: Home
         public ActionResult Index()
         {
@@ -29,7 +30,7 @@ namespace WebNails.Payment.Controllers
         }
 
 
-        public ActionResult GenerateQRCoce(string strCode, string strOwner = "", string strBuyer = "", string strReceiver = "", int intAmount = 0)
+        public ActionResult GenerateQRCoce(string token, string Domain, string strCode, string strOwner = "", string strBuyer = "", string strReceiver = "", int intAmount = 0)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             var dataJson = new
@@ -41,19 +42,19 @@ namespace WebNails.Payment.Controllers
                 Amount = intAmount
             };
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(JsonConvert.SerializeObject(dataJson), QRCodeGenerator.ECCLevel.Q);
-            if (!Directory.Exists(Server.MapPath("/Upload/QRCode/")))
+            if (!Directory.Exists(VirtualData + "/Upload/QRCode/"))
             {
-                Directory.CreateDirectory(Server.MapPath("/Upload/QRCode/"));
+                Directory.CreateDirectory(VirtualData + "/Upload/QRCode/");
             }
-            qrCodeData.SaveRawData(Server.MapPath("/Upload/QRCode/file-" + strCode + ".qrr"), QRCodeData.Compression.Uncompressed);
+            qrCodeData.SaveRawData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);
-            var qrCodeImage = qrCode.GetGraphic(20, Color.Black, Color.White, icon: ConvertToBitmap(Server.MapPath("/Content/images/logo.png")));
+            var qrCodeImage = qrCode.GetGraphic(20, Color.Black, Color.White, icon: ConvertToBitmap(VirtualData + "/Content/images/logo.png"));
             return View(BitmapToBytes(qrCodeImage));
         }
 
-        public ActionResult GetQRCoce(string strCode)
+        public ActionResult GetQRCoce(string token, string Domain, string strCode)
         {
-            QRCodeData qrCodeData = new QRCodeData(Server.MapPath("/Upload/QRCode/file-" + strCode + ".qrr"), QRCodeData.Compression.Uncompressed);
+            QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             return View(BitmapToBytes(qrCodeImage));
@@ -68,9 +69,9 @@ namespace WebNails.Payment.Controllers
             }
         }
 
-        public ActionResult GetImageQRCode(string strCode)
+        public ActionResult GetImageQRCode(string token, string Domain, string strCode)
         {
-            return File(Server.MapPath("/Upload/QRCode/file-" + strCode + ".png"), "image/png");
+            return File(VirtualData + "/Upload/QRCode/file-" + strCode + ".png", "image/png");
         }
 
         private Bitmap ConvertToBitmap(string fileName)
@@ -118,12 +119,12 @@ namespace WebNails.Payment.Controllers
 
                 var Count = param.Get<int>("@intTotalRecord");
 
-                return Json(new { Count = Count, data = objResult }, JsonRequestBehavior.AllowGet);
+                return Json(new { Count = Count, Data = objResult }, JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpPost]
-        public ActionResult UpdateCompleted(string token, Guid id)
+        public ActionResult UpdateCompleted(string token, string Domain, Guid id)
         {
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -141,7 +142,7 @@ namespace WebNails.Payment.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendMail(string token, Guid id)
+        public ActionResult SendMail(string token, string Domain, Guid id)
         {
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -151,11 +152,11 @@ namespace WebNails.Payment.Controllers
                 {
                     var objResult = sqlConnect.Execute("spInfoPaypal_UpdateStatus", new { strID = id, intStatus = (int)PaymentStatus.Success }, commandType: CommandType.StoredProcedure);
 
-                    return Json(new { Count = objResult, data = info });
+                    return Json(new { Count = objResult, Data = info });
                 }
                 else
                 {
-                    return Json(new { Count = 0, data = info });
+                    return Json(new { Count = 0, Data = info });
                 }
             }
         }

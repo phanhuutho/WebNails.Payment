@@ -19,20 +19,15 @@ namespace WebNails.Payment.Controllers
 {
     public class PaypalController : Controller
     {
+        private readonly string VirtualData = ConfigurationManager.AppSettings["VirtualData"];
         // GET: Paypal
         public ActionResult Index()
         {
             return Content("");
         }
 
-        public ActionResult Payment(string img = "")
-        {
-            ViewBag.Img = img;
-            return View();
-        }
-
         [HttpPost]
-        public ActionResult Process(string token, string EmailPaypal, string Domain, Guid strID, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string img = "", string codesale = "")
+        public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "")
         {
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -88,7 +83,7 @@ namespace WebNails.Payment.Controllers
             }
         }
 
-        public ActionResult Finish(string token, string strID)
+        public ActionResult Finish(string token, string Domain, string strID)
         {
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -105,35 +100,35 @@ namespace WebNails.Payment.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetDataCode(string SiteName, DateTime StartDate, DateTime EndDate)
+        public ActionResult GetDataCode(string token, string Domain, DateTime StartDate, DateTime EndDate)
         {
             return Json(new List<DataResponseModel>());
         }
 
         [HttpPost]
-        public ActionResult UpdateCodeRefund(string SiteName, string Code)
+        public ActionResult UpdateCodeRefund(string token, string Domain, string Code)
         {
             return Json("OK");
         }
 
 
-        public ActionResult GenerateQRCoce(string strCode)
+        public ActionResult GenerateQRCoce(string token, string Domain, string strCode)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(strCode, QRCodeGenerator.ECCLevel.Q);
-            if (!Directory.Exists(Server.MapPath("/Upload/QRCode/")))
+            if (!Directory.Exists(VirtualData + "/Upload/QRCode/"))
             {
-                Directory.CreateDirectory(Server.MapPath("/Upload/QRCode/"));
+                Directory.CreateDirectory(VirtualData + "/Upload/QRCode/");
             }
-            qrCodeData.SaveRawData(Server.MapPath("/Upload/QRCode/file-" + strCode + ".qrr"), QRCodeData.Compression.Uncompressed);
+            qrCodeData.SaveRawData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);
             var qrCodeImage = qrCode.GetGraphic(5);
             return View(BitmapToBytes(qrCodeImage));
         }
 
-        public ActionResult GetQRCoce(string strCode)
+        public ActionResult GetQRCoce(string token, string Domain, string strCode)
         {
-            QRCodeData qrCodeData = new QRCodeData(Server.MapPath("/Upload/QRCode/file-" + strCode + ".qrr"), QRCodeData.Compression.Uncompressed);
+            QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             return View(BitmapToBytes(qrCodeImage));
@@ -150,10 +145,10 @@ namespace WebNails.Payment.Controllers
 
         private void SaveBitmap(Bitmap img, string strCode)
         {
-            var filepath = Server.MapPath("/Upload/QRCode/file-" + strCode + ".png");
-            if (!Directory.Exists(Server.MapPath("/Upload/QRCode/")))
+            var filepath = VirtualData + "/Upload/QRCode/file-" + strCode + ".png";
+            if (!Directory.Exists(VirtualData + "/Upload/QRCode/"))
             {
-                Directory.CreateDirectory(Server.MapPath("/Upload/QRCode/"));
+                Directory.CreateDirectory(VirtualData + "/Upload/QRCode/");
             }
             img.Save(filepath);
         }

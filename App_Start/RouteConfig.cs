@@ -15,8 +15,8 @@ namespace WebNails.Payment
 
             routes.MapRoute(
                 name: "Main Site",
-                url: "{SiteName}/{Controller}/{Action}/{Id}",
-                defaults: new { SiteName = "system.nail", Controller = "home", Action = "index", Id = UrlParameter.Optional }
+                url: "{Domain}/{Controller}/{Action}/{Id}",
+                defaults: new { Domain = "system.nail", Controller = "home", Action = "index", Id = UrlParameter.Optional }
             );
         }
     }
