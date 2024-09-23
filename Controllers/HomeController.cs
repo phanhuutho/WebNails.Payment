@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using Dapper;
 using System.Data;
+using WebNails.Payment.Utilities;
 
 namespace WebNails.Payment.Controllers
 {
@@ -29,7 +30,7 @@ namespace WebNails.Payment.Controllers
             return View();
         }
 
-
+        [Token]
         public ActionResult GenerateQRCoce(string token, string Domain, string strCode, string strOwner = "", string strBuyer = "", string strReceiver = "", int intAmount = 0)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -52,6 +53,7 @@ namespace WebNails.Payment.Controllers
             return View(BitmapToBytes(qrCodeImage));
         }
 
+        [Token]
         public ActionResult GetQRCoce(string token, string Domain, string strCode)
         {
             QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
@@ -69,6 +71,7 @@ namespace WebNails.Payment.Controllers
             }
         }
 
+        [Token]
         public ActionResult GetImageQRCode(string token, string Domain, string strCode)
         {
             return File(VirtualData + "/Upload/QRCode/file-" + strCode + ".png", "image/png");
@@ -86,7 +89,8 @@ namespace WebNails.Payment.Controllers
             }
             return bitmap;
         }
-        
+
+        [Token]
         [HttpPost]
         public ActionResult Login(LoginModel model, string token, string Domain)
         {
@@ -104,6 +108,7 @@ namespace WebNails.Payment.Controllers
             }
         }
 
+        [Token]
         public ActionResult GetGiftManage(string token, string Domain, int intSkip, int intCountSort, string search = "")
         {
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
@@ -123,6 +128,7 @@ namespace WebNails.Payment.Controllers
             }
         }
 
+        [Token]
         [HttpPost]
         public ActionResult UpdateCompleted(string token, string Domain, Guid id)
         {
@@ -141,6 +147,7 @@ namespace WebNails.Payment.Controllers
             }
         }
 
+        [Token]
         [HttpPost]
         public ActionResult SendMail(string token, string Domain, Guid id)
         {
@@ -161,6 +168,7 @@ namespace WebNails.Payment.Controllers
             }
         }
 
+        [Token]
         [HttpPost]
         public ActionResult CheckCodeSaleOff(string token, string Domain, string Code, int Amount)
         {
@@ -189,6 +197,7 @@ namespace WebNails.Payment.Controllers
             return Json(new { Status = result, Message = message });
         }
 
+        [Token]
         [HttpPost]
         public ActionResult GetListNailCodeSaleByDomain(string token, string Domain)
         {

@@ -14,6 +14,7 @@ using QRCoder;
 using System.IO;
 using System.Drawing;
 using WebNails.Payment.Models;
+using WebNails.Payment.Utilities;
 
 namespace WebNails.Payment.Controllers
 {
@@ -26,6 +27,7 @@ namespace WebNails.Payment.Controllers
             return Content("");
         }
 
+        [Token]
         [HttpPost]
         public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "")
         {
@@ -83,6 +85,7 @@ namespace WebNails.Payment.Controllers
             }
         }
 
+        [Token]
         public ActionResult Finish(string token, string Domain, string strID)
         {
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
@@ -99,19 +102,21 @@ namespace WebNails.Payment.Controllers
             }
         }
 
+        [Token]
         [HttpPost]
         public ActionResult GetDataCode(string token, string Domain, DateTime StartDate, DateTime EndDate)
         {
             return Json(new List<DataResponseModel>());
         }
 
+        [Token]
         [HttpPost]
         public ActionResult UpdateCodeRefund(string token, string Domain, string Code)
         {
             return Json("OK");
         }
 
-
+        [Token]
         public ActionResult GenerateQRCoce(string token, string Domain, string strCode)
         {
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -126,6 +131,7 @@ namespace WebNails.Payment.Controllers
             return View(BitmapToBytes(qrCodeImage));
         }
 
+        [Token]
         public ActionResult GetQRCoce(string token, string Domain, string strCode)
         {
             QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
