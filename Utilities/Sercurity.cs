@@ -81,7 +81,7 @@ namespace WebNails.Payment.Utilities
                 SymmetricKey.Clear();
                 return Encoding.UTF8.GetString(PlainTextBytes, 0, ByteCount);
             }
-            catch (Exception ex)
+            catch
             {
                 return CipherText;
             }

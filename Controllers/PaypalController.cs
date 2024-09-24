@@ -31,6 +31,10 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "")
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
                 var IsValidCodeSale = false;
@@ -81,13 +85,17 @@ namespace WebNails.Payment.Controllers
                     strDescriptionValidCode = DescriptionCode
                 }, commandType: CommandType.StoredProcedure);
 
-                return Json(new { Amount = amount });
+                return Json(amount);
             }
         }
 
         [Token]
         public ActionResult Finish(string token, string Domain, string strID)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
                 var info = sqlConnect.Query<InfoPaypal>("spInfoPaypal_GetInfoPaypalByID", new { strID = strID }, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -106,6 +114,10 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult GetDataCode(string token, string Domain, DateTime StartDate, DateTime EndDate)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             return Json(new List<DataResponseModel>());
         }
 
@@ -113,12 +125,20 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult UpdateCodeRefund(string token, string Domain, string Code)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             return Json("OK");
         }
 
         [Token]
         public ActionResult GenerateQRCoce(string token, string Domain, string strCode)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(strCode, QRCodeGenerator.ECCLevel.Q);
             if (!Directory.Exists(VirtualData + "/Upload/QRCode/"))
@@ -134,6 +154,10 @@ namespace WebNails.Payment.Controllers
         [Token]
         public ActionResult GetQRCoce(string token, string Domain, string strCode)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);

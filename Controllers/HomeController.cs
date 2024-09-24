@@ -33,6 +33,10 @@ namespace WebNails.Payment.Controllers
         [Token]
         public ActionResult GenerateQRCoce(string token, string Domain, string strCode, string strOwner = "", string strBuyer = "", string strReceiver = "", int intAmount = 0)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             var dataJson = new
             {
@@ -56,6 +60,10 @@ namespace WebNails.Payment.Controllers
         [Token]
         public ActionResult GetQRCoce(string token, string Domain, string strCode)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
@@ -74,6 +82,10 @@ namespace WebNails.Payment.Controllers
         [Token]
         public ActionResult GetImageQRCode(string token, string Domain, string strCode)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             return File(VirtualData + "/Upload/QRCode/file-" + strCode + ".png", "image/png");
         }
 
@@ -94,6 +106,10 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel model, string token, string Domain)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
                 var checklogin = sqlConnect.Query("spUserSite_GetByUsernameAndPassword", new { strUsername = model.Username, strPassword = model.Password, strDomain = Domain }, commandType: CommandType.StoredProcedure).Count() == 1;
@@ -111,6 +127,10 @@ namespace WebNails.Payment.Controllers
         [Token]
         public ActionResult GetGiftManage(string token, string Domain, int intSkip, int intCountSort, string search = "")
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
                 var param = new DynamicParameters();
@@ -132,6 +152,10 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult UpdateCompleted(string token, string Domain, Guid id)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
                 var objResult = sqlConnect.Execute("spInfoPaypal_UpdateIsUsed", new { strID = id, bitIsUsed = true }, commandType: CommandType.StoredProcedure);
@@ -151,6 +175,10 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult SendMail(string token, string Domain, Guid id)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
                 var info = sqlConnect.Query<InfoPaypal>("spInfoPaypal_GetInfoPaypalByID", new { strID = id }, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -172,6 +200,10 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult CheckCodeSaleOff(string token, string Domain, string Code, int Amount)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             var result = false;
             var message = "";
             if (!string.IsNullOrEmpty(Code))
@@ -201,6 +233,10 @@ namespace WebNails.Payment.Controllers
         [HttpPost]
         public ActionResult GetListNailCodeSaleByDomain(string token, string Domain)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Content("Invalid Token");
+            }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
                 var data = sqlConnect.Query<NailCodeSale>("spNailCodeSale_GetNailCodeSalesByDomain", new { @strDomain = Domain, strDateNow = DateTime.Now }, commandType: CommandType.StoredProcedure).ToList();
