@@ -20,7 +20,7 @@ namespace WebNails.Payment.Utilities
         private readonly string VectorKeyAPI = ConfigurationManager.AppSettings["VectorKeyAPI"];
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext != null && !string.IsNullOrEmpty(filterContext.HttpContext.Request["token"]))
+            if (filterContext.HttpContext != null && !string.IsNullOrEmpty(filterContext.HttpContext.Request["token"]) && !string.IsNullOrEmpty(filterContext.HttpContext.Request["Domain"]))
             {
                 var strEncryptToken = filterContext.HttpContext.Request["token"];
                 var strDecryptToken = Sercurity.DecryptFromBase64(strEncryptToken, TokenKeyAPI, SaltKeyAPI, VectorKeyAPI);
@@ -28,12 +28,12 @@ namespace WebNails.Payment.Utilities
 
                 if (objToken == null || string.IsNullOrEmpty(objToken.Token) && !CheckTokenAPI(objToken.Token) || string.IsNullOrEmpty(objToken.Domain) || !CheckDomainInServer(objToken.Domain) || objToken.TimeExpire == null || objToken.TimeExpire.Value < DateTime.Now)
                 {
-                    filterContext.Result = new RedirectResult("/Home/Index");
+                    filterContext.Result = new RedirectResult("/");
                 }
             }
             else
             {
-                filterContext.Result = new RedirectResult("/Home/Index");
+                filterContext.Result = new RedirectResult("/");
             }
         }
 
