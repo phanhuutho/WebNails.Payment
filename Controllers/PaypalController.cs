@@ -104,9 +104,9 @@ namespace WebNails.Payment.Controllers
                 {
                     var objResult = sqlConnect.Execute("spInfoPaypal_UpdateStatus", new { strID = strID, intStatus = (int)PaymentStatus.Success }, commandType: CommandType.StoredProcedure);
 
-                    return Json(new { count = objResult, info });
+                    return Json(new { Count = objResult, Data = info });
                 }
-                return Json(new { count = 0, info });
+                return Json(new { Count = 0, Data = info });
             }
         }
 
