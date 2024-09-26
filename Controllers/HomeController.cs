@@ -22,7 +22,7 @@ namespace WebNails.Payment.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            return Content("");
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Gifts()
