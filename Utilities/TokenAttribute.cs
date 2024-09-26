@@ -26,7 +26,7 @@ namespace WebNails.Payment.Utilities
                 var strDecryptToken = Sercurity.DecryptFromBase64(strEncryptToken, TokenKeyAPI, SaltKeyAPI, VectorKeyAPI);
                 var objToken = JsonConvert.DeserializeObject<TokenResult>(strDecryptToken);
 
-                if (objToken == null || string.IsNullOrEmpty(objToken.Token) && !CheckTokenAPI(objToken.Token) || string.IsNullOrEmpty(objToken.Domain) || !CheckDomainInServer(objToken.Domain) || objToken.TimeExpire == null || objToken.TimeExpire.Value < DateTime.Now)
+                if (objToken == null || string.IsNullOrEmpty(objToken.Token) || !CheckTokenAPI(objToken.Token) || string.IsNullOrEmpty(objToken.Domain) || !CheckDomainInServer(objToken.Domain) || objToken.TimeExpire == null || objToken.TimeExpire.Value < DateTime.Now)
                 {
                     filterContext.Result = new RedirectResult("/");
                 }
