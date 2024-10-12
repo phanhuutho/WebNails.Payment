@@ -24,16 +24,16 @@ namespace WebNails.Payment.Controllers
         // GET: Paypal
         public ActionResult Index()
         {
-            return Content("");
+            return Json("");
         }
 
         [Token]
         [HttpPost]
-        public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "")
+        public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Code, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "")
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -66,12 +66,12 @@ namespace WebNails.Payment.Controllers
                     }
                 }
 
-                var objResult = sqlConnect.Execute("spInfoPaypal_InsertBefore", new
+                var objResult = sqlConnect.Execute("spInfoPaypalBefore_Insert", new
                 {
                     strID = strID,
                     strDomain = Domain,
                     strTransactions = Transactions,
-                    strCode = Transactions,
+                    strCode = Code,
                     strOwner = EmailPaypal,
                     strStock = stock,
                     strEmail = email,
@@ -90,24 +90,59 @@ namespace WebNails.Payment.Controllers
         }
 
         [Token]
+        [HttpPost]
+        public ActionResult InsertInfoPaypal(string token, string Domain, string Transactions)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Json("");
+            }
+            using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
+            {
+                var objResult = sqlConnect.Execute("spInfoPaypal_Insert", new
+                {
+                    strTransactions = Transactions
+                }, commandType: CommandType.StoredProcedure);
+
+                return Json(string.Format("{0}", objResult));
+            }    
+        }
+
+        [Token]
+        public ActionResult PaymentResponse()
+        {
+            var data = new RouteValueDictionary();
+            foreach (var key in Request.Form.AllKeys)
+            {
+                data.Add(key, Request[key]);
+            }
+            foreach (var key in Request.QueryString.AllKeys)
+            {
+                data.Add(key, Request[key]);
+            }
+
+            TempData["PayerID"] = Request["PayerID"];
+            return RedirectToAction("Finish", data);
+        }
+
+        [Token]
         public ActionResult Finish(string token, string Domain, string strID)
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
-            using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
+            if (Request.QueryString["PayerID"] != null && Request.QueryString["PayerID"] == string.Format("{0}", TempData["PayerID"]))
             {
-                var info = sqlConnect.Query<InfoPaypal>("spInfoPaypal_GetInfoPaypalByID", new { strID = strID }, commandType: CommandType.StoredProcedure).FirstOrDefault();
-
-                if (info != null)
-                {
-                    var objResult = sqlConnect.Execute("spInfoPaypal_UpdateStatus", new { strID = strID, intStatus = (int)PaymentStatus.Success }, commandType: CommandType.StoredProcedure);
-
-                    return Json(new { Count = objResult, Data = info });
-                }
-                return Json(new { Count = 0, Data = info });
+                ViewBag.SecureHash = "<font color='blue'><strong>THANKS YOU !!!</strong></font>";
+                ViewBag.ResponseCode = "0";
             }
+            else
+            {
+                ViewBag.SecureHash = "<font color='red'><strong>FAIL</strong></font>";
+                ViewBag.ResponseCode = "-1";
+            }
+            return View();
         }
 
         [Token]
@@ -116,7 +151,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             return Json(new List<DataResponseModel>());
         }
@@ -127,7 +162,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             return Json("OK");
         }
@@ -137,7 +172,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(strCode, QRCodeGenerator.ECCLevel.Q);
@@ -156,7 +191,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);

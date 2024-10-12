@@ -35,7 +35,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             var dataJson = new
@@ -62,7 +62,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             QRCodeData qrCodeData = new QRCodeData(VirtualData + "/Upload/QRCode/file-" + strCode + ".qrr", QRCodeData.Compression.Uncompressed);
             QRCode qrCode = new QRCode(qrCodeData);
@@ -84,7 +84,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             return File(VirtualData + "/Upload/QRCode/file-" + strCode + ".png", "image/png");
         }
@@ -108,7 +108,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -129,7 +129,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -154,7 +154,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -177,7 +177,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
@@ -202,7 +202,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             var result = false;
             var message = "";
@@ -235,7 +235,7 @@ namespace WebNails.Payment.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Content("Invalid Token");
+                return Json("");
             }
             using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
             {
