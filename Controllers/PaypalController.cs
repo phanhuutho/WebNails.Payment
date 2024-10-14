@@ -147,6 +147,33 @@ namespace WebNails.Payment.Controllers
 
         [Token]
         [HttpPost]
+        public ActionResult CheckHasTXN(string token, string Domain, Guid strID, string txt_id, float intAmount)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Json("");
+            }
+            var result = false;
+            if(!string.IsNullOrEmpty(txt_id))
+            {
+                using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
+                {
+                    var objResult = sqlConnect.Query<int>("spInfoPaypal_HasTXN", new
+                    {
+                        strID,
+                        strTXN = txt_id,
+                        strDomain = Domain,
+                        intAmount
+                    }, commandType: CommandType.StoredProcedure);
+
+                    return Json(string.Format("{0}", objResult));
+                }
+            }    
+            return Json(result);
+        }
+
+        [Token]
+        [HttpPost]
         public ActionResult GetDataCode(string token, string Domain, DateTime StartDate, DateTime EndDate)
         {
             if (string.IsNullOrEmpty(token))
