@@ -91,7 +91,7 @@ namespace WebNails.Payment.Controllers
 
         [Token]
         [HttpPost]
-        public ActionResult InsertInfoPaypal(string token, string Domain, string Transactions)
+        public ActionResult InsertInfoPaypal(string token, string Domain, Guid strID, string Transactions, string TXN_ID, string PaymentStatus, string Verifysign, string Detail)
         {
             if (string.IsNullOrEmpty(token))
             {
@@ -101,7 +101,12 @@ namespace WebNails.Payment.Controllers
             {
                 var objResult = sqlConnect.Execute("spInfoPaypal_Insert", new
                 {
-                    strTransactions = Transactions
+                    strID,
+                    strTransactions = Transactions,
+                    strTXN = TXN_ID,
+                    strPaymentStatus = PaymentStatus,
+                    strVerifySign = Verifysign,
+                    strDetail = Detail
                 }, commandType: CommandType.StoredProcedure);
 
                 return Json(string.Format("{0}", objResult));
@@ -153,7 +158,7 @@ namespace WebNails.Payment.Controllers
             {
                 return Json("");
             }
-            var result = false;
+            var result = 0;
             if(!string.IsNullOrEmpty(txt_id))
             {
                 using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
@@ -166,10 +171,10 @@ namespace WebNails.Payment.Controllers
                         intAmount
                     }, commandType: CommandType.StoredProcedure);
 
-                    return Json(string.Format("{0}", objResult));
+                    result = objResult.DefaultIfEmpty(0).FirstOrDefault();
                 }
             }    
-            return Json(result);
+            return Json(string.Format("{0}", result));
         }
 
         [Token]
@@ -185,13 +190,46 @@ namespace WebNails.Payment.Controllers
 
         [Token]
         [HttpPost]
-        public ActionResult UpdateCodeRefund(string token, string Domain, string Code)
+        public ActionResult UpdateRefund(string token, string Domain, Guid strID, string TXN_ID, string PaymentStatus, string Verifysign, string Parent_TXN_ID, string Detail)
         {
             if (string.IsNullOrEmpty(token))
             {
                 return Json("");
             }
-            return Json("OK");
+            var result = 0;
+            using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
+            {
+                result = sqlConnect.Execute("spInfoPaypal_UpdateRefund", new
+                {
+                    strID,
+                    strTXN = TXN_ID,
+                    strPaymentStatus = PaymentStatus,
+                    strVerifySign = Verifysign,
+                    strParentTXN = Parent_TXN_ID,
+                    strDetail = Detail
+                }, commandType: CommandType.StoredProcedure);
+            }
+            return Json(string.Format("{0}", result));
+        }
+
+        [Token]
+        [HttpPost]
+        public ActionResult GetInfoPaypal(string token, string Domain, Guid strID)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Json("");
+            }
+
+            using (var sqlConnect = new SqlConnection(ConfigurationManager.ConnectionStrings["ContextDatabase"].ConnectionString))
+            {
+                var objResult = sqlConnect.Query<InfoPaypal>("spInfoPaypal_GetInfoPaypalByID", new
+                {
+                    strID
+                }, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                return Json(objResult);
+            }
         }
 
         [Token]
