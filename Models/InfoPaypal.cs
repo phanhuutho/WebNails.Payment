@@ -28,6 +28,7 @@ namespace WebNails.Payment.Models
         public string DescriptionValidCode { get; set; }
         public bool IsRefund { get; set; }
         public DateTime DateTimeUpdateRefund { get; set; }
+        public string Img { get; set; }
     }
 
     public enum PaymentStatus

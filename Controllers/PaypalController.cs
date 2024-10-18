@@ -29,7 +29,7 @@ namespace WebNails.Payment.Controllers
 
         [Token]
         [HttpPost]
-        public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Code, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "")
+        public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Code, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "", string img = "")
         {
             if (string.IsNullOrEmpty(token))
             {
@@ -82,7 +82,8 @@ namespace WebNails.Payment.Controllers
                     strCodeSaleOff = codesale,
                     intAmountReal = Cost,
                     intValidCode = ValidCode,
-                    strDescriptionValidCode = DescriptionCode
+                    strDescriptionValidCode = DescriptionCode,
+                    strImg = img
                 }, commandType: CommandType.StoredProcedure);
 
                 return Json(amount);
