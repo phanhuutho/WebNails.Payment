@@ -56,6 +56,11 @@ namespace WebNails.Payment.Controllers
                         {
                             DescriptionCode = "Code sale off correct";
                             var amount_update = Cost * (100 - objNailCodeSale.Sale) / 100;
+                            if ((IsBuyerFeePaypal ?? false) == true)
+                            {
+                                DescriptionCode += ", and charge paypal buyer " + string.Format("{0:N2}", (FeePaypal ?? 0));
+                                amount_update += (FeePaypal ?? 0);
+                            }
                             amount = string.Format("{0:N2}", amount_update);
                         }
                     }
