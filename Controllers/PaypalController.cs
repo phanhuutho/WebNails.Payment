@@ -56,7 +56,7 @@ namespace WebNails.Payment.Controllers
                         {
                             DescriptionCode = "Code sale off correct";
                             var amount_update = Cost * (100 - objNailCodeSale.Sale) / 100;
-                            if ((IsBuyerFeePaypal ?? false) == true)
+                            if ((IsBuyerFeePaypal ?? false) == true && (FeePaypal ?? 0) > 0)
                             {
                                 DescriptionCode += ", and charge paypal buyer " + string.Format("{0:N2}", (FeePaypal ?? 0));
                                 amount_update += (FeePaypal ?? 0);
@@ -76,13 +76,23 @@ namespace WebNails.Payment.Controllers
                     {
                         DescriptionCode = "Owner sale off " + string.Format("{0}%", (SalesOff ?? 0));
                         var amount_update = Cost * (100 - (SalesOff ?? 0)) / 100;
-                        if ((IsBuyerFeePaypal ?? false) == true)
+                        if ((IsBuyerFeePaypal ?? false) == true && (FeePaypal ?? 0) > 0)
                         {
                             DescriptionCode += ", and charge paypal buyer " + string.Format("{0:N2}", (FeePaypal ?? 0));
                             amount_update += (FeePaypal ?? 0);
                         }    
                         amount = string.Format("{0:N2}", amount_update);
-                    }    
+                    }   
+                    else
+                    {
+                        var amount_update = Cost;
+                        if ((IsBuyerFeePaypal ?? false) == true && (FeePaypal ?? 0) > 0)
+                        {
+                            DescriptionCode += "charge paypal buyer " + string.Format("{0:N2}", (FeePaypal ?? 0));
+                            amount_update += (FeePaypal ?? 0);
+                        }
+                        amount = string.Format("{0:N2}", amount_update);
+                    }
                 }    
 
                 var objResult = sqlConnect.Execute("spInfoPaypalBefore_Insert", new
