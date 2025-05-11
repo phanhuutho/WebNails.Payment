@@ -29,7 +29,7 @@ namespace WebNails.Payment.Controllers
 
         [Token]
         [HttpPost]
-        public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Code, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "", string img = "")
+        public ActionResult Process(string token, string Domain, string EmailPaypal, Guid strID, string Code, string Transactions, string amount, string stock, string email, string message, string name_receiver, string name_buyer, string codesale = "", string img = "", int? SalesOff = 0, int? FeePaypal = 0, bool? IsBuyerFeePaypal = false)
         {
             if (string.IsNullOrEmpty(token))
             {
@@ -65,6 +65,20 @@ namespace WebNails.Payment.Controllers
                         DescriptionCode = "Code sale off incorrect";
                     }
                 }
+                else
+                {
+                    if ((SalesOff ?? 0) > 0)
+                    {
+                        DescriptionCode = "Owner sale off " + string.Format("{0}%", (SalesOff ?? 0));
+                        var amount_update = Cost * (100 - (SalesOff ?? 0)) / 100;
+                        if ((IsBuyerFeePaypal ?? false) == true)
+                        {
+                            DescriptionCode += ", and charge paypal buyer " + string.Format("{0:N2}", (FeePaypal ?? 0));
+                            amount_update += (FeePaypal ?? 0);
+                        }    
+                        amount = string.Format("{0:N2}", amount_update);
+                    }    
+                }    
 
                 var objResult = sqlConnect.Execute("spInfoPaypalBefore_Insert", new
                 {
